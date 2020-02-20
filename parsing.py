@@ -28,8 +28,7 @@ class Parsing:
 
     def parse(self):
         lines = self.rawData.split("\n")
-        if len(lines[-1]) == 0:
-            lines.pop()
+        lines = [string for string in lines if string != ""]
         [self.booksNumber, self.librariesNumber, self.daysNumber] = lines[0].split(" ")
         self.booksScore = list(map(int, lines[1].split(" ")))
         lines = lines[2:]
