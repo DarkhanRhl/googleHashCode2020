@@ -42,13 +42,13 @@ class Core:
         return highestLibrary
     
     def loop(self):
-        for library in self.librairies:
-            self.setScore(library)
         libraries = copy.copy(self.librairies)
         days = 0
         libraryNb = 0
         usedLibraries = []
         while days < int(self.daysNumber):
+            for library in libraries:
+                self.setScore(library)
             highestLibrary = self.getHighestScoreLibrary(libraries)
             try:
                 days += int(highestLibrary['signUpDays'])
