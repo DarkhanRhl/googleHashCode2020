@@ -38,7 +38,9 @@ class Parsing:
                 "booksNumber": int(libraryInfo[0]),
                 "signUpDays": int(libraryInfo[1]),
                 "shipCapacity": int(libraryInfo[2]),
-                "books": list(map(int, lines[index + 1].split(" ")))
+                "books": list(map(int, lines[index + 1].split(" "))),
+                "score": 0,
+                "index": int(index / 2)
             })
 
     def getParsing(self):
