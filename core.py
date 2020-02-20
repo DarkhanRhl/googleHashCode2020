@@ -9,8 +9,12 @@ class Core:
         self.booksScore = booksScore #List of Number
         self.librairies = librairies #List of Object
 
+        for library in self.librairies:
+            library["books"] = self.getBooksSortedByScore(library["books"])
+
         self.days = 0
         self.end = False
+        self.banned = []
 
         self.loop()
 
@@ -20,15 +24,25 @@ class Core:
         response.reverse()
         return response
 
+    def removeBannedBooks(self, books):
+        newBooks = []
+        for book in books:
+            try:
+                self.banned.index(book)
+            except ValueError:
+                newBooks.append(book)
+        return newBooks
+
     def setScore(self, library):
-        sortedBooks = self.getBooksSortedByScore(library["books"])
+        library["books"] = self.removeBannedBooks(library["books"])
+
         daysAvailable = (self.daysNumber - self.days) - library["signUpDays"]
         if daysAvailable <= 0:
             return 
         numberBooksGettable = min(library["booksNumber"], daysAvailable * library["shipCapacity"])
         daysTaken = library["signUpDays"] + math.ceil(numberBooksGettable / library["shipCapacity"])
         
-        scores = [self.booksScore[index] for index in sortedBooks]
+        scores = [self.booksScore[index] for index in library["books"]]
         score = sum(scores[:numberBooksGettable]) / daysTaken
         library["score"] = score
 
@@ -41,6 +55,9 @@ class Core:
                 highestLibrary = library
         return highestLibrary
     
+    def addBanedBooks(self, highestLibrary):
+        self.banned += highestLibrary["books"]
+
     def loop(self):
         libraries = copy.copy(self.librairies)
         libraryNb = 0
@@ -55,6 +72,7 @@ class Core:
                 break
             libraryNb += 1
             usedLibraries.append(highestLibrary)
+            self.addBanedBooks(highestLibrary)
             libraries.remove(highestLibrary)
         print(libraryNb)
         for library in usedLibraries:
