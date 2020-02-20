@@ -22,6 +22,8 @@ class Core:
     def setScore(self, library):
         sortedBooks = self.getBooksSortedByScore(library["books"])
         daysAvailable = (self.daysNumber - self.actualDay) - library["signUpDays"]
+        if daysAvailable <= 0:
+            return 
         numberBooksGettable = min(library["booksNumber"], daysAvailable * library["shipCapacity"])
         daysTaken = library["signUpDays"] + math.ceil(numberBooksGettable / library["shipCapacity"])
         
@@ -34,4 +36,5 @@ class Core:
             for library in self.librairies:
                 self.setScore(library)
             self.actualDay += 1
-            self.end = True
+            if self.actualDay == self.daysNumber:
+                self.end = True
