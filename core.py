@@ -9,7 +9,7 @@ class Core:
         self.booksScore = booksScore #List of Number
         self.librairies = librairies #List of Object
 
-        self.actualDay = 0
+        self.days = 0
         self.end = False
 
         self.loop()
@@ -22,7 +22,7 @@ class Core:
 
     def setScore(self, library):
         sortedBooks = self.getBooksSortedByScore(library["books"])
-        daysAvailable = (self.daysNumber - self.actualDay) - library["signUpDays"]
+        daysAvailable = (self.daysNumber - self.days) - library["signUpDays"]
         if daysAvailable <= 0:
             return 
         numberBooksGettable = min(library["booksNumber"], daysAvailable * library["shipCapacity"])
@@ -43,15 +43,14 @@ class Core:
     
     def loop(self):
         libraries = copy.copy(self.librairies)
-        days = 0
         libraryNb = 0
         usedLibraries = []
-        while days < int(self.daysNumber):
+        while self.days < int(self.daysNumber):
             for library in libraries:
                 self.setScore(library)
             highestLibrary = self.getHighestScoreLibrary(libraries)
             try:
-                days += int(highestLibrary['signUpDays'])
+                self.days += int(highestLibrary['signUpDays'])
             except:
                 break
             libraryNb += 1
